@@ -125,8 +125,9 @@ Updated IAM Role:
 <img width="1881" height="746" alt="3467235046a446d298e50f18bde5bbd7" src="https://github.com/user-attachments/assets/570d03ea-4eac-44da-82bb-30aaba18e7dc" />
 <img width="1881" height="746" alt="3467235046a446d298e50f18bde5bbd7 (1)" src="https://github.com/user-attachments/assets/b601c112-c1fe-4b05-86b9-625e49e4a7b4" />
 
- Again updated Lambda Code:
- import boto3
+Again updated Lambda Code:
+
+import boto3
 import random
 import json
 
@@ -155,17 +156,21 @@ def lambda_handler(event, context):
             },
             "body": json.dumps({"fact": "No facts available in DynamoDB."})
         }
-fact = random.choice(items)["FactText"]
-  # Messages for Claude 3.5 Sonnet
-  messages = [
-       {
-         "role": "user",
+
+
+    fact = random.choice(items)["FactText"]
+
+
+    # Messages for Claude 3.5 Sonnet
+    messages = [
+        {
+            "role": "user",
             "content": f"Take this cloud computing fact and make it fun and engaging in 1-2 sentences maximum. Keep it short and witty: {fact}"
         }
     ]
 
 
-  body = {
+    body = {
         "anthropic_version": "bedrock-2023-05-31",
         "max_tokens": 100,
         "messages": messages,
@@ -173,7 +178,7 @@ fact = random.choice(items)["FactText"]
     }
 
 
-   try:
+    try:
         # Call Claude 3.5 Sonnet on Bedrock
         resp = bedrock.invoke_model(
             modelId="anthropic.claude-3-5-sonnet-20240620-v1:0",
@@ -183,28 +188,30 @@ fact = random.choice(items)["FactText"]
         )
 
 
-  # Parse response
-  result = json.loads(resp["body"].read())
+        # Parse response
+        result = json.loads(resp["body"].read())
         witty_fact = ""
 
 
-   # Claude v3 response: look inside "content"
-  if "content" in result and result["content"]:
+        # Claude v3 response: look inside "content"
+        if "content" in result and result["content"]:
             for block in result["content"]:
                 if block.get("type") == "text":
                     witty_fact = block["text"].strip()
                     break
 
 
-   # Fallback if empty or too long
-   if not witty_fact or len(witty_fact) > 300:
+        # Fallback if empty or too long
+        if not witty_fact or len(witty_fact) > 300:
             witty_fact = fact
 
-  except Exception as e:
+
+    except Exception as e:
         print(f"Bedrock error: {e}")
         witty_fact = fact
-        
-  return {
+
+
+    return {
         "statusCode": 200,
         "headers": {
             "Content-Type": "application/json",
@@ -214,7 +221,6 @@ fact = random.choice(items)["FactText"]
         },
         "body": json.dumps({"fact": witty_fact})
     }
-
 Final Result:
 
 <img width="1280" height="619" alt="27795a6e54624873b0b67eb1d16722ae" src="https://github.com/user-attachments/assets/e30bd3a2-22f7-40b9-a18a-e6ca66fd56f2" />
