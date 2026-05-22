@@ -10,6 +10,7 @@ This project provided practical experience in designing and deploying serverless
 
 The primary goal of this project was to move beyond basic tutorials and build a portfolio-ready application that demonstrates practical cloud engineering skills and real AWS service integration.
 
+
 Services Used:
 
 AWS Lambda: Serverless backend to generate cloud fun facts.
@@ -19,20 +20,24 @@ Amazon Bedrock: Generative AI to make facts witty.
 AWS Amplify: Hosting service for the React frontend.
 AWS IAM: Identity and Access Management for secure permissions.
 
+
 Architectural Diagram:
 
 <img width="1147" height="621" alt="ba68b9bbca714ba386bf118d7078c8b4" src="https://github.com/user-attachments/assets/e12b44e2-c3bc-4c68-82f3-2261a288840c" />
+
 
 Created a Lambda Function:
 
 <img width="1716" height="762" alt="0b14908848f249f08caf7bd74c4e37b6" src="https://github.com/user-attachments/assets/e3ac770a-63fe-4a8e-9a82-7c0261bd429c" />
 <img width="1892" height="814" alt="d9ff910bd3d74e35b21272cc0146c8e2" src="https://github.com/user-attachments/assets/1ec18d2d-490e-427a-91bf-c50edecf7acf" />
 
-Added lambda code:
-import random
-import json
 
-def lambda_handler(event, context):
+Added lambda code:
+
+    import random
+    import json
+
+    def lambda_handler(event, context):
     facts = [
         "AWS S3 was launched in 2006 and still rules cloud storage.",
         "Cloud computing can save companies up to 30% on IT costs.",
@@ -56,7 +61,7 @@ def lambda_handler(event, context):
         "AWS is the market leader in cloud with ~32% share (as of 2025)."
     ]
     
-fact = random.choice(facts)
+    fact = random.choice(facts)
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "application/json"},
@@ -84,29 +89,29 @@ Updated Lambda Role:
 
 Updated Lambda Code:
 
-import boto3
-import random
-import json
+    import boto3
+    import random
+    import json
 
-# Create DynamoDB client
-dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table("CloudFacts")
+    # Create DynamoDB client
+    dynamodb = boto3.resource("dynamodb")
+    table = dynamodb.Table("CloudFacts")
 
-def lambda_handler(event, context):
+    def lambda_handler(event, context):
     # Scan entire table (not efficient for huge tables, but fine here)
     response = table.scan()
     items = response.get("Items", [])
 
-  if not items:
+    if not items:
         return {
             "statusCode": 500,
             "body": json.dumps({"error": "No facts found"})
         }
 
-  # Pick random fact
-  fact = random.choice(items)["FactText"]
+    # Pick random fact
+    fact = random.choice(items)["FactText"]
 
-  return {
+    return {
         "statusCode": 200,
         "headers": {"Content-Type": "application/json"},
         "body": json.dumps({"fact": fact})
@@ -114,16 +119,19 @@ def lambda_handler(event, context):
 
 <img width="1818" height="720" alt="f00fbb7f191149bcbe6afe4c4d852578" src="https://github.com/user-attachments/assets/98f041b2-e4d4-4357-8370-ebfac26385ed" />
 
+
 GenAI Version:
   Request Model Access in Bedrock:
 
   <img width="908" height="557" alt="download" src="https://github.com/user-attachments/assets/f0a44c34-ab7f-4616-a329-e4b8d2a891c3" />
+  
 
 Updated IAM Role:
 
 
 <img width="1881" height="746" alt="3467235046a446d298e50f18bde5bbd7" src="https://github.com/user-attachments/assets/570d03ea-4eac-44da-82bb-30aaba18e7dc" />
 <img width="1881" height="746" alt="3467235046a446d298e50f18bde5bbd7 (1)" src="https://github.com/user-attachments/assets/b601c112-c1fe-4b05-86b9-625e49e4a7b4" />
+
 
 Again updated Lambda Code:
 
@@ -221,6 +229,7 @@ Again updated Lambda Code:
         },
         "body": json.dumps({"fact": witty_fact})
     }
+
 
 
 Final Result:
