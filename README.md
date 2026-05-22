@@ -127,21 +127,21 @@ Updated IAM Role:
 
 Again updated Lambda Code:
 
-import boto3
-import random
-import json
+      import boto3
+      import random
+      import json
 
 
-# DynamoDB connection
-dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table("CloudFacts")
+    # DynamoDB connection
+    dynamodb = boto3.resource("dynamodb")
+    table = dynamodb.Table("CloudFacts")
 
 
-# Bedrock client
-bedrock = boto3.client("bedrock-runtime")
+    # Bedrock client
+    bedrock = boto3.client("bedrock-runtime")
 
 
-def lambda_handler(event, context):
+    def lambda_handler(event, context):
     # Fetch all facts from DynamoDB
     response = table.scan()
     items = response.get("Items", [])
@@ -221,6 +221,8 @@ def lambda_handler(event, context):
         },
         "body": json.dumps({"fact": witty_fact})
     }
+
+
 Final Result:
 
 <img width="1280" height="619" alt="27795a6e54624873b0b67eb1d16722ae" src="https://github.com/user-attachments/assets/e30bd3a2-22f7-40b9-a18a-e6ca66fd56f2" />
